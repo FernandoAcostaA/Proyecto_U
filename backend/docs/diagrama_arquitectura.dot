@@ -1,0 +1,77 @@
+digraph Arquitectura {
+    graph [rankdir=TB, bgcolor="white", pad="0.3", nodesep="0.45", ranksep="0.55", fontname="Helvetica"];
+    node  [shape=box, style="filled,rounded", fontname="Helvetica", fontsize=11, color="#333333", penwidth=1.2];
+    edge  [color="#555555", fontname="Helvetica", fontsize=9, arrowsize=0.8];
+
+    subgraph cluster_cliente {
+        label="CLIENTE HTTP" ; style="rounded,dashed" ; color="#777777" ; fontcolor="#555555" ; fontsize=10;
+        "curl / Postman / App movil" [fillcolor="#EAF2F8", shape=box3d];
+    }
+
+    subgraph cluster_http {
+        label="TRANSPORTE / ENRUTADO" ; style="rounded,dashed" ; color="#777777";
+        "routes/api.php  (prefix /api/v1)" [fillcolor="#FEF9E7"];
+        "Middleware: auth:sanctum + role" [fillcolor="#FDEBD0"];
+    }
+
+    subgraph cluster_app {
+        label="CAPA DE PRESENTACION / CONTROL" ; style="rounded,dashed" ; color="#777777";
+        "Controllers  Api\\V1\\*" [fillcolor="#D6EAF8"];
+        "Form Requests (Validacion)" [fillcolor="#D6EAF8"];
+        "API Resources (V1)" [fillcolor="#D6EAF8"];
+    }
+
+    subgraph cluster_negocio {
+        label="CAPA DE NEGOCIO (Services)" ; style="rounded,dashed" ; color="#777777";
+        "AuthService" [fillcolor="#D5F5E3"];
+        "DisponibilidadService" [fillcolor="#D5F5E3"];
+        "CitaService" [fillcolor="#D5F5E3"];
+        "StockService" [fillcolor="#D5F5E3"];
+        "RecordatorioService" [fillcolor="#D5F5E3"];
+        "CalificacionService" [fillcolor="#D5F5E3"];
+        "ReservaPublicaService" [fillcolor="#D5F5E3"];
+    }
+
+    subgraph cluster_datos {
+        label="ACCESO A DATOS" ; style="rounded,dashed" ; color="#777777";
+        "Modelos Eloquent" [fillcolor="#FADBD8"];
+        "PostgreSQL  glamstock" [fillcolor="#FADBD8", shape=cylinder];
+    }
+
+    subgraph cluster_jobs {
+        label="COLA / PROCESOS ASINCRONOS" ; style="rounded,dashed" ; color="#777777";
+        "EnviarRecordatorioJob" [fillcolor="#E8DAEF"];
+        "queue:work (worker)" [fillcolor="#E8DAEF"];
+        "WhatsApp simulada (Log)" [fillcolor="#E8DAEF"];
+        "reservas:expirar (scheduler)" [fillcolor="#E8DAEF"];
+    }
+
+    "curl / Postman / App movil" -> "routes/api.php  (prefix /api/v1)" [label=" JSON HTTP "];
+    "routes/api.php  (prefix /api/v1)" -> "Middleware: auth:sanctum + role" [label=" auth + rol "];
+    "Middleware: auth:sanctum + role" -> "Controllers  Api\\V1\\*";
+    "Controllers  Api\\V1\\*" -> "Form Requests (Validacion)" [label=" validated() "];
+    "Controllers  Api\\V1\\*" -> "API Resources (V1)" [label=" response "];
+    "Controllers  Api\\V1\\*" -> "AuthService" [label=" delega "];
+    "Controllers  Api\\V1\\*" -> "DisponibilidadService";
+    "Controllers  Api\\V1\\*" -> "CitaService";
+    "Controllers  Api\\V1\\*" -> "StockService";
+    "Controllers  Api\\V1\\*" -> "RecordatorioService";
+    "Controllers  Api\\V1\\*" -> "CalificacionService";
+    "Controllers  Api\\V1\\*" -> "ReservaPublicaService";
+
+    "AuthService" -> "Modelos Eloquent";
+    "DisponibilidadService" -> "Modelos Eloquent";
+    "CitaService" -> "Modelos Eloquent";
+    "StockService" -> "Modelos Eloquent";
+    "RecordatorioService" -> "Modelos Eloquent";
+    "CalificacionService" -> "Modelos Eloquent";
+    "ReservaPublicaService" -> "Modelos Eloquent";
+    "Modelos Eloquent" -> "PostgreSQL  glamstock" [label=" SQL "];
+
+    "RecordatorioService" -> "EnviarRecordatorioJob" [label=" dispatch "];
+    "EnviarRecordatorioJob" -> "queue:work (worker)" [label=" cola jobs "];
+    "queue:work (worker)" -> "WhatsApp simulada (Log)";
+    "queue:work (worker)" -> "PostgreSQL  glamstock" [style=dotted];
+    "reservas:expirar (scheduler)" -> "PostgreSQL  glamstock" [style=dotted, label=" cancela vencidas "];
+    "PostgreSQL  glamstock" -> "EnviarRecordatorioJob" [style=dotted, dir=back, label=" registro estado "];
+}

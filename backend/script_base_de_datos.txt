@@ -1,0 +1,174 @@
+================================================================================
+ SCRIPT DE LA BASE DE DATOS - BLACKHOUND (BARBERIA)
+ Para ver TODAS las tablas y su contenido en PostgreSQL
+================================================================================
+
+DATOS DE CONEXION:
+  Base de datos : glamstock
+  Usuario       : glamstock
+  Password      : glamstock_secret
+  Host          : localhost (puerto 5432)
+  Servidor      : C:\Program Files\PostgreSQL\17\bin\psql.exe
+
+COMO USARLO:
+  Opcion 1 - pgAdmin:
+     Abrir pgAdmin -> doble clic en la base "glamstock" -> click derecho ->
+     "Query Tool" -> pegar TODO este archivo -> F5 (Run / Ejecutar).
+
+  Opcion 2 - psql (Linea de comandos):
+     set PGPASSWORD=glamstock_secret
+     "C:\Program Files\PostgreSQL\17\bin\psql.exe" -U glamstock -h localhost -d glamstock -f script_base_de_datos.sql
+
+
+================================================================================
+ 1) LISTADO DE TODAS LAS TABLAS
+================================================================================
+
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
+ORDER BY table_name;
+
+
+================================================================================
+ 2) CANTIDAD DE REGISTROS POR TABLA
+================================================================================
+
+SELECT 'roles'                     AS tabla, count(*) FROM roles
+UNION ALL SELECT 'usuarios',                  count(*) FROM usuarios
+UNION ALL SELECT 'empleados',                 count(*) FROM empleados
+UNION ALL SELECT 'servicios',                 count(*) FROM servicios
+UNION ALL SELECT 'servicio_empleado',         count(*) FROM servicio_empleado
+UNION ALL SELECT 'servicio_producto',         count(*) FROM servicio_producto
+UNION ALL SELECT 'productos',                 count(*) FROM productos
+UNION ALL SELECT 'proveedores',               count(*) FROM proveedores
+UNION ALL SELECT 'clientes',                  count(*) FROM clientes
+UNION ALL SELECT 'citas',                     count(*) FROM citas
+UNION ALL SELECT 'comisiones',                count(*) FROM comisiones
+UNION ALL SELECT 'pagos',                     count(*) FROM pagos
+UNION ALL SELECT 'horarios_disponibilidad',   count(*) FROM horarios_disponibilidad
+UNION ALL SELECT 'movimientos_stock',         count(*) FROM movimientos_stock
+UNION ALL SELECT 'recordatorios',             count(*) FROM recordatorios
+UNION ALL SELECT 'tipos_corte',               count(*) FROM tipos_corte
+UNION ALL SELECT 'calificaciones',            count(*) FROM calificaciones
+UNION ALL SELECT 'personal_access_tokens',    count(*) FROM personal_access_tokens
+UNION ALL SELECT 'migrations',                count(*) FROM migrations
+UNION ALL SELECT 'sessions',                  count(*) FROM sessions
+UNION ALL SELECT 'jobs',                      count(*) FROM jobs
+UNION ALL SELECT 'failed_jobs',               count(*) FROM failed_jobs
+UNION ALL SELECT 'cache',                     count(*) FROM cache
+UNION ALL SELECT 'cache_locks',               count(*) FROM cache_locks
+ORDER BY tabla;
+
+
+================================================================================
+ 3) CONTENIDO DE CADA TABLA
+    (17 tablas de dominio + tablas internas de Laravel)
+================================================================================
+
+-- *****************************************************************************
+-- 3.1 ROLES (admin, trabajador, cliente)
+-- *****************************************************************************
+SELECT * FROM roles ORDER BY id;
+
+-- *****************************************************************************
+-- 3.2 USUARIOS (administrador, trabajadores y clientes con acceso)
+-- *****************************************************************************
+SELECT u.id, u.email, u.rol_id, r.nombre AS rol, u.created_at
+FROM usuarios u
+JOIN roles r ON r.id = u.rol_id
+ORDER BY u.id;
+
+-- *****************************************************************************
+-- 3.3 EMPLEADOS (peluqueros/barberos)
+-- *****************************************************************************
+SELECT * FROM empleados ORDER BY id;
+
+-- *****************************************************************************
+-- 3.4 SERVICIOS (cortes, tintes, barba, etc.)
+-- *****************************************************************************
+SELECT * FROM servicios ORDER BY id;
+
+-- *****************************************************************************
+-- 3.5 SERVICIO_EMPLEADO (relacion: que empleados dan cada servicio)
+-- *****************************************************************************
+SELECT * FROM servicio_empleado ORDER BY servicio_id, empleado_id;
+
+-- *****************************************************************************
+-- 3.6 SERVICIO_PRODUCTO (relacion: productos que consume cada servicio + cantidad)
+-- *****************************************************************************
+SELECT * FROM servicio_producto ORDER BY servicio_id;
+
+-- *****************************************************************************
+-- 3.7 PRODUCTOS (inventario)
+-- *****************************************************************************
+SELECT * FROM productos ORDER BY id;
+
+-- *****************************************************************************
+-- 3.8 PROVEEDORES
+-- *****************************************************************************
+SELECT * FROM proveedores ORDER BY id;
+
+-- *****************************************************************************
+-- 3.9 CLIENTES (usuario_id opcional cuando el cliente se registra)
+-- *****************************************************************************
+SELECT * FROM clientes ORDER BY id;
+
+-- *****************************************************************************
+-- 3.10 CITAS (agenda + verificacion de reservas publicas)
+-- *****************************************************************************
+SELECT * FROM citas ORDER BY id;
+
+-- *****************************************************************************
+-- 3.11 COMISIONES (comision generada por cita completada)
+-- *****************************************************************************
+SELECT * FROM comisiones ORDER BY id;
+
+-- *****************************************************************************
+-- 3.12 PAGOS
+-- *****************************************************************************
+SELECT * FROM pagos ORDER BY id;
+
+-- *****************************************************************************
+-- 3.13 HORARIOS_DISPONIBILIDAD (turnos de cada empleado por dia de semana 0-6)
+-- *****************************************************************************
+SELECT * FROM horarios_disponibilidad ORDER BY empleado_id, dia_semana;
+
+-- *****************************************************************************
+-- 3.14 MOVIMIENTOS_STOCK (entradas/salidas de inventario)
+-- *****************************************************************************
+SELECT * FROM movimientos_stock ORDER BY id;
+
+-- *****************************************************************************
+-- 3.15 RECORDATORIOS (notificaciones programadas de citas)
+-- *****************************************************************************
+SELECT * FROM recordatorios ORDER BY id;
+
+-- *****************************************************************************
+-- 3.16 TIPOS_CORTE (catalogo de estilos ofrecidos al cliente)
+-- *****************************************************************************
+SELECT * FROM tipos_corte ORDER BY id;
+
+-- *****************************************************************************
+-- 3.17 CALIFICACIONES (estrellas 1-5 sobre citas completadas)
+-- *****************************************************************************
+SELECT * FROM calificaciones ORDER BY id;
+
+
+================================================================================
+ 4) TABLAS INTERNAS DE LARAVEL (no son parte del negocio)
+================================================================================
+
+SELECT * FROM personal_access_tokens ORDER BY id;
+SELECT * FROM migrations;
+SELECT * FROM sessions;
+SELECT * FROM jobs;
+SELECT * FROM failed_jobs;
+SELECT * FROM cache;
+SELECT * FROM cache_locks;
+-- SELECT * FROM password_reset_tokens;
+-- SELECT * FROM job_batches;
+
+================================================================================
+ FIN DEL SCRIPT
+================================================================================

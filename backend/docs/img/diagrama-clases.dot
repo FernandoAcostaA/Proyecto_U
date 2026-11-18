@@ -1,0 +1,71 @@
+digraph Modelo_base_datos {
+  rankdir=LR;
+  splines=polyline;
+  nodesep=0.25;
+  ranksep=0.55;
+  fontname="Segoe UI";
+
+  node [
+    shape=record,
+    style=filled,
+    fillcolor="#fffdf7",
+    color="#8d6e63",
+    fontname="Segoe UI",
+    fontsize=10,
+    margin="0.12,0.08"
+  ];
+
+  edge [
+    arrowsize=0.6,
+    fontname="Segoe UI",
+    fontsize=9,
+    color="#5d4037"
+  ];
+
+  roles [label="{rol|+ id\l+ nombre\l+ descripcion\l}"];
+  usuarios [label="{usuario|+ id\l+ email\l+ password\l+ rol_id\l}"];
+  clientes [label="{cliente|+ id\l+ nombre\l+ telefono\l+ email\l+ consentimiento_aceptado\l+ consentimiento_en\l+ consentimiento_version\l+ usuario_id\l}"];
+  empleados [label="{empleado|+ id\l+ nombre\l+ telefono\l+ comision_base\l+ fecha_ingreso\l+ usuario_id\l+ foto\l}"];
+  horarios_disponibilidad [label="{horario_disponibilidad|+ id\l+ empleado_id\l+ dia_semana\l+ hora_inicio\l+ hora_fin\l}"];
+  servicios [label="{servicio|+ id\l+ nombre\l+ descripcion\l+ duracion_min\l+ precio\l+ imagen\l+ porcentaje_comision\l}"];
+  servicio_empleado [label="{servicio_empleado|+ empleado_id\l+ servicio_id\l}"];
+  servicio_producto [label="{servicio_producto|+ servicio_id\l+ producto_id\l+ cantidad_usada\l}"];
+  citas [label="{cita|+ id\l+ cliente_id\l+ empleado_id\l+ servicio_id\l+ tipo_corte_id\l+ fecha_hora_inicio\l+ fecha_hora_fin\l+ estado\l+ verificacion_token\l+ verificacion_expira_en\l+ calificacion_token\l}"];
+  pagos [label="{pago|+ id\l+ cita_id\l+ monto\l+ metodo\l+ estado\l+ pagado_en\l}"];
+  comisiones [label="{comision|+ id\l+ cita_id\l+ empleado_id\l+ monto\l+ porcentaje_barbero\l+ porcentaje_barberia\l+ monto_barberia\l+ estado_pago\l}"];
+  calificaciones [label="{calificacion|+ id\l+ cita_id\l+ empleado_id\l+ servicio_id\l+ estrellas\l+ comentario\l+ origen\l}"];
+  recordatorios [label="{recordatorio|+ id\l+ cita_id\l+ tipo\l+ canal\l+ destino\l+ proveedor\l+ costo_estimado\l+ asunto\l+ mensaje\l+ fecha_envio_programada\l+ fecha_envio_real\l+ estado\l+ respuesta_token\l+ respondido_en\l+ respuesta\l}"];
+  qr_cobros [label="{qr_cobro|+ id\l+ cita_id\l+ pago_id\l+ referencia\l+ payload\l+ monto\l+ estado\l+ expira_en\l+ confirmado_en\l+ confirmado_por\l}"];
+  cierres_caja [label="{cierre_caja|+ id\l+ fecha\l+ cantidad_pagos\l+ cantidad_citas\l+ total_cobrado\l+ total_comisiones\l+ total_barberia\l+ total_pendiente_comisiones\l+ cerrado_por\l}"];
+  movimientos_stock [label="{movimiento_stock|+ id\l+ producto_id\l+ cita_id\l+ tipo\l+ cantidad\l}"];
+  productos [label="{producto|+ id\l+ proveedor_id\l+ nombre\l+ stock_actual\l+ stock_minimo\l}"];
+  proveedores [label="{proveedor|+ id\l+ nombre\l+ telefono\l}"];
+  tipos_corte [label="{tipo_corte|+ id\l+ nombre\l+ descripcion\l+ imagen\l+ activo\l}"];
+
+  roles -> usuarios [label="1 : 0..*"];
+  usuarios -> clientes [label="1 : 0..1"];
+  usuarios -> empleados [label="1 : 0..1"];
+  clientes -> citas [label="1 : 0..*"];
+  empleados -> citas [label="1 : 0..*"];
+  servicios -> citas [label="1 : 0..*"];
+  tipos_corte -> citas [label="1 : 0..*"];
+  citas -> pagos [label="1 : 0..1"];
+  citas -> comisiones [label="1 : 0..1"];
+  citas -> calificaciones [label="1 : 0..1"];
+  citas -> recordatorios [label="1 : 0..*"];
+  citas -> qr_cobros [label="1 : 0..*"];
+  pagos -> qr_cobros [label="1 : 0..1"];
+  usuarios -> cierres_caja [label="1 : 0..*"];
+  usuarios -> qr_cobros [label="1 : 0..*"];
+  citas -> movimientos_stock [label="1 : 0..*"];
+  productos -> movimientos_stock [label="1 : 0..*"];
+  proveedores -> productos [label="1 : 0..*"];
+  empleados -> horarios_disponibilidad [label="1 : 0..*"];
+  empleados -> comisiones [label="1 : 0..*"];
+  empleados -> calificaciones [label="1 : 0..*"];
+  servicios -> calificaciones [label="1 : 0..*"];
+  servicios -> servicio_empleado [label="1 : 0..*"];
+  empleados -> servicio_empleado [label="1 : 0..*"];
+  servicios -> servicio_producto [label="1 : 0..*"];
+  productos -> servicio_producto [label="1 : 0..*"];
+}

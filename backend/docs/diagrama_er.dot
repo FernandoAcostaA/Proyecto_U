@@ -1,0 +1,202 @@
+digraph ER {
+    graph [rankdir=TB, bgcolor="white", pad="0.25", nodesep="0.35", ranksep="0.5", fontname="Helvetica", dpi=130];
+    node  [shape=plain, fontname="Helvetica", fontsize=10];
+
+    edge [color="#5D6D7E", fontname="Helvetica", fontsize=9, arrowsize=0.7];
+
+    roles [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#2E86C1" colspan="2"><font color="white"><b>roles</b></font></td></tr>
+          <tr><td><b>id</b> PK</td></tr>
+          <tr><td>nombre (u)</td></tr>
+          <tr><td>descripcion</td></tr>
+        </table>>];
+
+    usuarios [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#2E86C1" colspan="2"><font color="white"><b>usuarios</b></font></td></tr>
+          <tr><td><b>id</b> PK</td></tr>
+          <tr><td>rol_id FK</td></tr>
+          <tr><td>email (u)</td></tr>
+          <tr><td>password</td></tr>
+        </table>>];
+
+    empleados [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#2E86C1" colspan="2"><font color="white"><b>empleados</b></font></td></tr>
+          <tr><td><b>id</b> PK</td></tr>
+          <tr><td>usuario_id FK (n)</td></tr>
+          <tr><td>nombre</td></tr>
+          <tr><td>telefono</td></tr>
+          <tr><td>foto</td></tr>
+          <tr><td>comision_base</td></tr>
+          <tr><td>fecha_ingreso</td></tr>
+        </table>>];
+
+    horarios [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#2E86C1" colspan="2"><font color="white"><b>horarios_disponibilidad</b></font></td></tr>
+          <tr><td><b>id</b> PK</td></tr>
+          <tr><td>empleado_id FK</td></tr>
+          <tr><td>dia_semana 0-6</td></tr>
+          <tr><td>hora_inicio</td></tr>
+          <tr><td>hora_fin</td></tr>
+        </table>>];
+
+    servicios [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#2E86C1" colspan="2"><font color="white"><b>servicios</b></font></td></tr>
+          <tr><td><b>id</b> PK</td></tr>
+          <tr><td>nombre</td></tr>
+          <tr><td>duracion_min</td></tr>
+          <tr><td>precio</td></tr>
+          <tr><td>porcentaje_comision</td></tr>
+        </table>>];
+
+    servicio_empleado [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#58D68D" colspan="2"><font color="white"><b>servicio_empleado</b></font></td></tr>
+          <tr><td>servicio_id PK, FK</td></tr>
+          <tr><td>empleado_id PK, FK</td></tr>
+        </table>>];
+
+    clientes [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#2E86C1" colspan="2"><font color="white"><b>clientes</b></font></td></tr>
+          <tr><td><b>id</b> PK</td></tr>
+          <tr><td>usuario_id FK (u, n)</td></tr>
+          <tr><td>nombre</td></tr>
+          <tr><td>telefono (u)</td></tr>
+          <tr><td>email</td></tr>
+        </table>>];
+
+    proveedores [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#2E86C1" colspan="2"><font color="white"><b>proveedores</b></font></td></tr>
+          <tr><td><b>id</b> PK</td></tr>
+          <tr><td>nombre</td></tr>
+          <tr><td>telefono</td></tr>
+        </table>>];
+
+    productos [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#2E86C1" colspan="2"><font color="white"><b>productos</b></font></td></tr>
+          <tr><td><b>id</b> PK</td></tr>
+          <tr><td>proveedor_id FK (n)</td></tr>
+          <tr><td>nombre</td></tr>
+          <tr><td>stock_actual</td></tr>
+          <tr><td>stock_minimo</td></tr>
+        </table>>];
+
+    servicio_producto [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#58D68D" colspan="2"><font color="white"><b>servicio_producto</b></font></td></tr>
+          <tr><td>servicio_id PK, FK</td></tr>
+          <tr><td>producto_id PK, FK</td></tr>
+          <tr><td>cantidad_usada</td></tr>
+        </table>>];
+
+    tipos_corte [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#2E86C1" colspan="2"><font color="white"><b>tipos_corte</b></font></td></tr>
+          <tr><td><b>id</b> PK</td></tr>
+          <tr><td>nombre (u)</td></tr>
+          <tr><td>descripcion</td></tr>
+          <tr><td>imagen</td></tr>
+          <tr><td>activo</td></tr>
+        </table>>];
+
+    citas [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#E67E22" colspan="2"><font color="white"><b>citas</b></font></td></tr>
+          <tr><td><b>id</b> PK</td></tr>
+          <tr><td>cliente_id FK</td></tr>
+          <tr><td>empleado_id FK</td></tr>
+          <tr><td>servicio_id FK</td></tr>
+          <tr><td>tipo_corte_id FK (n)</td></tr>
+          <tr><td>fecha_hora_inicio</td></tr>
+          <tr><td>fecha_hora_fin</td></tr>
+          <tr><td>estado (incl. pendiente_verificacion)</td></tr>
+          <tr><td>verificacion_token (u, n)</td></tr>
+          <tr><td>verificacion_expira_en (n)</td></tr>
+          <tr><td>calificacion_token (u)</td></tr>
+          <tr><td><font color="#922B21" point-size="9">EXCLUDE gist (no solape)</font></td></tr>
+        </table>>];
+
+    comisiones [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#2E86C1" colspan="2"><font color="white"><b>comisiones</b></font></td></tr>
+          <tr><td><b>id</b> PK</td></tr>
+          <tr><td>cita_id FK (u)</td></tr>
+          <tr><td>empleado_id FK</td></tr>
+          <tr><td>monto</td></tr>
+          <tr><td>estado_pago</td></tr>
+        </table>>];
+
+    pagos [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#2E86C1" colspan="2"><font color="white"><b>pagos</b></font></td></tr>
+          <tr><td><b>id</b> PK</td></tr>
+          <tr><td>cita_id FK (u)</td></tr>
+          <tr><td>monto</td></tr>
+          <tr><td>metodo</td></tr>
+          <tr><td>estado</td></tr>
+          <tr><td>pagado_en</td></tr>
+        </table>>];
+
+    calificaciones [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#2E86C1" colspan="2"><font color="white"><b>calificaciones</b></font></td></tr>
+          <tr><td><b>id</b> PK</td></tr>
+          <tr><td>cita_id FK (u)</td></tr>
+          <tr><td>empleado_id FK</td></tr>
+          <tr><td>servicio_id FK</td></tr>
+          <tr><td>estrellas 1-5</td></tr>
+          <tr><td>comentario</td></tr>
+          <tr><td>origen (panel|cliente)</td></tr>
+        </table>>];
+
+    recordatorios [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#2E86C1" colspan="2"><font color="white"><b>recordatorios</b></font></td></tr>
+          <tr><td><b>id</b> PK</td></tr>
+          <tr><td>cita_id FK</td></tr>
+          <tr><td>canal</td></tr>
+          <tr><td>fecha_envio_programada</td></tr>
+          <tr><td>fecha_envio_real</td></tr>
+          <tr><td>estado</td></tr>
+        </table>>];
+
+    movimientos_stock [label=<
+        <table border="0" cellborder="1" cellspacing="0" cellpadding="4" bgcolor="white">
+          <tr><td bgcolor="#2E86C1" colspan="2"><font color="white"><b>movimientos_stock</b></font></td></tr>
+          <tr><td><b>id</b> PK</td></tr>
+          <tr><td>producto_id FK</td></tr>
+          <tr><td>cita_id FK (n)</td></tr>
+          <tr><td>tipo (entrada|salida)</td></tr>
+          <tr><td>cantidad</td></tr>
+        </table>>];
+
+    roles -> usuarios [label="1:N", dir=none];
+    usuarios -> empleados [label="0..1", dir=none];
+    usuarios -> clientes [label="0..1", dir=none];
+    empleados -> horarios [label="1:N", dir=none];
+    servicios -> servicio_empleado [label="1:N", dir=none];
+    empleados -> servicio_empleado [label="1:N", dir=none];
+    servicios -> servicio_producto [label="1:N", dir=none];
+    productos -> servicio_producto [label="1:N", dir=none];
+    proveedores -> productos [label="1:N", dir=none];
+
+    clientes -> citas [label="1:N", dir=none];
+    empleados -> citas [label="1:N", dir=none];
+    servicios -> citas [label="1:N", dir=none];
+    tipos_corte -> citas [label="1:N", dir=none];
+    citas -> comisiones [label="1:1", dir=none];
+    citas -> pagos [label="1:1", dir=none];
+    citas -> calificaciones [label="1:1", dir=none];
+    citas -> recordatorios [label="1:N", dir=none];
+    citas -> movimientos_stock [label="1:N", dir=none];
+    productos -> movimientos_stock [label="1:N", dir=none];
+    empleados -> calificaciones [label="1:N", dir=none];
+    servicios -> calificaciones [label="1:N", dir=none];
+}

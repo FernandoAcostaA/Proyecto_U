@@ -1,0 +1,251 @@
+digraph Blackhound {
+    rankdir="LR";
+    bgcolor="white";
+    nodesep="0.5";
+    ranksep="0.7";
+    splines="spline";
+    fontname="Calibri";
+    fontsize="12";
+    labelloc="t";
+    label="Diagrama de Clases / Base de Datos - Blackhound (Barbería)";
+
+    node [shape="none", fontname="Calibri"];
+    edge [fontname="Calibri", fontsize="10", arrowsize="0.6"];
+
+    /* ================= ROLES ================= */
+    roles [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#4e79a7"><font color="white"><b>ROLES</b></font></td></tr>
+            <tr><td align="left" port="id"><u>id</u>: bigint [PK]</td></tr>
+            <tr><td align="left">nombre: varchar (unico)</td></tr>
+            <tr><td align="left">descripcion: varchar</td></tr>
+        </table>
+    >];
+
+    /* ================= USUARIOS ================= */
+    usuarios [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#59a14f"><font color="white"><b>USUARIOS</b></font></td></tr>
+            <tr><td align="left" port="id"><u>id</u>: bigint [PK]</td></tr>
+            <tr><td align="left">rol_id: bigint (FK)</td></tr>
+            <tr><td align="left">email: varchar</td></tr>
+            <tr><td align="left">password: varchar</td></tr>
+        </table>
+    >];
+
+    /* ================= EMPLEADOS ================= */
+    empleados [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#f28e2b"><font color="white"><b>EMPLEADOS</b></font></td></tr>
+            <tr><td align="left" port="id"><u>id</u>: bigint [PK]</td></tr>
+            <tr><td align="left">usuario_id: bigint (FK)</td></tr>
+            <tr><td align="left">nombre: varchar</td></tr>
+            <tr><td align="left">telefono: varchar</td></tr>
+            <tr><td align="left">foto: varchar</td></tr>
+            <tr><td align="left">comision_base: numeric</td></tr>
+            <tr><td align="left">fecha_ingreso: date</td></tr>
+        </table>
+    >];
+
+    /* ================= SERVICIOS ================= */
+    servicios [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#e15759"><font color="white"><b>SERVICIOS</b></font></td></tr>
+            <tr><td align="left" port="id"><u>id</u>: bigint [PK]</td></tr>
+            <tr><td align="left">nombre: varchar</td></tr>
+            <tr><td align="left">duracion_min: integer</td></tr>
+            <tr><td align="left">precio: numeric</td></tr>
+            <tr><td align="left">porcentaje_comision: numeric</td></tr>
+        </table>
+    >];
+
+    /* ================= PRODUCTOS ================= */
+    productos [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#76b7b2"><font color="white"><b>PRODUCTOS</b></font></td></tr>
+            <tr><td align="left" port="id"><u>id</u>: bigint [PK]</td></tr>
+            <tr><td align="left">proveedor_id: bigint (FK)</td></tr>
+            <tr><td align="left">nombre: varchar</td></tr>
+            <tr><td align="left">stock_actual: integer</td></tr>
+            <tr><td align="left">stock_minimo: integer</td></tr>
+        </table>
+    >];
+
+    /* ================= PROVEEDORES ================= */
+    proveedores [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#9c755f"><font color="white"><b>PROVEEDORES</b></font></td></tr>
+            <tr><td align="left" port="id"><u>id</u>: bigint [PK]</td></tr>
+            <tr><td align="left">nombre: varchar</td></tr>
+            <tr><td align="left">telefono: varchar</td></tr>
+        </table>
+    >];
+
+    /* ================= CLIENTES ================= */
+    clientes [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#edc948"><font color="white"><b>CLIENTES</b></font></td></tr>
+            <tr><td align="left" port="id"><u>id</u>: bigint [PK]</td></tr>
+            <tr><td align="left">usuario_id: bigint (FK, unico, null)</td></tr>
+            <tr><td align="left">nombre: varchar</td></tr>
+            <tr><td align="left">telefono: varchar (unico)</td></tr>
+            <tr><td align="left">email: varchar</td></tr>
+        </table>
+    >];
+
+    /* ================= CITAS ================= */
+    citas [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#b07aa1"><font color="white"><b>CITAS</b></font></td></tr>
+            <tr><td align="left" port="id"><u>id</u>: bigint [PK]</td></tr>
+            <tr><td align="left">cliente_id: bigint (FK)</td></tr>
+            <tr><td align="left">empleado_id: bigint (FK)</td></tr>
+            <tr><td align="left">servicio_id: bigint (FK)</td></tr>
+            <tr><td align="left">tipo_corte_id: bigint (FK, null)</td></tr>
+            <tr><td align="left">fecha_hora_inicio: timestamp</td></tr>
+            <tr><td align="left">fecha_hora_fin: timestamp</td></tr>
+            <tr><td align="left">estado: varchar (pendiente_verificacion/pendiente/confirmada/completada/cancelada/no_asistio)</td></tr>
+            <tr><td align="left">verificacion_token: varchar (unico, null)</td></tr>
+            <tr><td align="left">verificacion_expira_en: timestamp (null)</td></tr>
+            <tr><td align="left">calificacion_token: uuid (unico)</td></tr>
+        </table>
+    >];
+
+    /* ================= COMISIONES ================= */
+    comisiones [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#98df8a"><font color="black"><b>COMISIONES</b></font></td></tr>
+            <tr><td align="left" port="id"><u>id</u>: bigint [PK]</td></tr>
+            <tr><td align="left">cita_id: bigint (FK)</td></tr>
+            <tr><td align="left">empleado_id: bigint (FK)</td></tr>
+            <tr><td align="left">monto: numeric</td></tr>
+            <tr><td align="left">estado_pago: varchar</td></tr>
+        </table>
+    >];
+
+    /* ================= PAGOS ================= */
+    pagos [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#ff9da7"><font color="black"><b>PAGOS</b></font></td></tr>
+            <tr><td align="left" port="id"><u>id</u>: bigint [PK]</td></tr>
+            <tr><td align="left">cita_id: bigint (FK)</td></tr>
+            <tr><td align="left">monto: numeric</td></tr>
+            <tr><td align="left">metodo: varchar (efectivo/tarjeta)</td></tr>
+            <tr><td align="left">estado: varchar (pagado/reembolsado)</td></tr>
+            <tr><td align="left">pagado_en: timestamp</td></tr>
+        </table>
+    >];
+
+    /* ================= HORARIOS ================= */
+    horarios [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#aec7e8"><font color="black"><b>HORARIOS_DISPONIBILIDAD</b></font></td></tr>
+            <tr><td align="left" port="id"><u>id</u>: bigint [PK]</td></tr>
+            <tr><td align="left">empleado_id: bigint (FK)</td></tr>
+            <tr><td align="left">dia_semana: smallint (0=dgo..6=sab)</td></tr>
+            <tr><td align="left">hora_inicio: time</td></tr>
+            <tr><td align="left">hora_fin: time</td></tr>
+        </table>
+    >];
+
+    /* ================= MOVIMIENTOS STOCK ================= */
+    movimientos [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#c7c7c7"><font color="black"><b>MOVIMIENTOS_STOCK</b></font></td></tr>
+            <tr><td align="left" port="id"><u>id</u>: bigint [PK]</td></tr>
+            <tr><td align="left">producto_id: bigint (FK)</td></tr>
+            <tr><td align="left">cita_id: bigint (FK)</td></tr>
+            <tr><td align="left">tipo: varchar (entrada/salida)</td></tr>
+            <tr><td align="left">cantidad: integer</td></tr>
+        </table>
+    >];
+
+    /* ================= RECORDATORIOS ================= */
+    recordatorios [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#ffbb78"><font color="black"><b>RECORDATORIOS</b></font></td></tr>
+            <tr><td align="left" port="id"><u>id</u>: bigint [PK]</td></tr>
+            <tr><td align="left">cita_id: bigint (FK)</td></tr>
+            <tr><td align="left">canal: varchar</td></tr>
+            <tr><td align="left">fecha_envio_programada: timestamp</td></tr>
+            <tr><td align="left">fecha_envio_real: timestamp</td></tr>
+            <tr><td align="left">estado: varchar</td></tr>
+        </table>
+    >];
+
+    /* ================= TIPOS DE CORTE ================= */
+    tipos_corte [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#f1ce63"><font color="black"><b>TIPOS_CORTE</b></font></td></tr>
+            <tr><td align="left" port="id"><u>id</u>: bigint [PK]</td></tr>
+            <tr><td align="left">nombre: varchar</td></tr>
+            <tr><td align="left">descripcion: varchar</td></tr>
+            <tr><td align="left">imagen: varchar</td></tr>
+            <tr><td align="left">activo: boolean</td></tr>
+        </table>
+    >];
+
+    /* ================= CALIFICACIONES ================= */
+    calificaciones [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#ffbf00"><font color="black"><b>CALIFICACIONES</b></font></td></tr>
+            <tr><td align="left" port="id"><u>id</u>: bigint [PK]</td></tr>
+            <tr><td align="left">cita_id: bigint (FK, unico)</td></tr>
+            <tr><td align="left">empleado_id: bigint (FK)</td></tr>
+            <tr><td align="left">servicio_id: bigint (FK)</td></tr>
+            <tr><td align="left">estrellas: smallint (1-5)</td></tr>
+            <tr><td align="left">comentario: text</td></tr>
+            <tr><td align="left">origen: varchar (panel/cliente)</td></tr>
+        </table>
+    >];
+
+    /* ================= PIVOTES ================= */
+    serv_emp [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#d4b106"><font color="white"><b>SERVICIO_EMPLEADO</b></font></td></tr>
+            <tr><td align="left">servicio_id: bigint [PK, FK]</td></tr>
+            <tr><td align="left">empleado_id: bigint [PK, FK]</td></tr>
+        </table>
+    >];
+
+    serv_prod [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="3">
+            <tr><td bgcolor="#d4b106"><font color="white"><b>SERVICIO_PRODUCTO</b></font></td></tr>
+            <tr><td align="left">servicio_id: bigint [PK, FK]</td></tr>
+            <tr><td align="left">producto_id: bigint [PK, FK]</td></tr>
+            <tr><td align="left">cantidad_usada: integer</td></tr>
+        </table>
+    >];
+
+    /* ================= RELACIONES ================= */
+    roles -> usuarios [dir=none, taillabel="1", headlabel="*"];
+    usuarios -> empleados [dir=none, taillabel="1", headlabel="0..1"];
+    usuarios -> clientes [dir=none, taillabel="1", headlabel="0..1"];
+
+    empleados -> horarios [dir=none, taillabel="1", headlabel="*"];
+    empleados -> citas [dir=none, taillabel="1", headlabel="*"];
+    empleados -> comisiones [dir=none, taillabel="1", headlabel="*"];
+
+    servicios -> citas [dir=none, taillabel="1", headlabel="*"];
+    tipos_corte -> citas [dir=none, taillabel="1", headlabel="*"];
+
+    clientes -> citas [dir=none, taillabel="1", headlabel="*"];
+
+    citas -> comisiones [dir=none, style=dashed, taillabel="1", headlabel="1"];
+    citas -> pagos [dir=none, style=dashed, taillabel="1", headlabel="1"];
+    citas -> calificaciones [dir=none, style=dashed, taillabel="1", headlabel="1"];
+    citas -> recordatorios [dir=none, taillabel="1", headlabel="*"];
+    citas -> movimientos [dir=none, taillabel="1", headlabel="*"];
+
+    empleados -> calificaciones [dir=none, taillabel="1", headlabel="*"];
+    servicios -> calificaciones [dir=none, taillabel="1", headlabel="*"];
+
+    proveedores -> productos [dir=none, taillabel="1", headlabel="*"];
+
+    productos -> movimientos [dir=none, taillabel="1", headlabel="*"];
+
+    servicios -> serv_emp [dir=none, taillabel="1", headlabel="*"];
+    empleados -> serv_emp [dir=none, taillabel="1", headlabel="*"];
+    servicios -> serv_prod [dir=none, taillabel="1", headlabel="*"];
+    productos -> serv_prod [dir=none, taillabel="1", headlabel="*"];
+}
